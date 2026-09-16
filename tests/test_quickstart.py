@@ -33,6 +33,7 @@ class QuickstartTest(unittest.TestCase):
             report = json.loads(subprocess.run(commands[-1], capture_output=True, text=True, check=True).stdout)
             self.assertTrue(report["ok"])
             self.assertTrue((vault / "00 - ChatGPT Knowledge Ledger.md").is_file())
+            self.assertTrue((vault / "10 - Ingest" / "RAW").is_dir())
             self.assertTrue(any((vault / "01 - MOCs" / "Weekly").rglob("*.md")))
         finally:
             shutil.rmtree(temp)

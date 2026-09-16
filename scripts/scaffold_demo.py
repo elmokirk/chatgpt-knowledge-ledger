@@ -169,6 +169,7 @@ def write(path: Path, text: str) -> None:
 def scaffold(vault: Path) -> None:
     global VAULT
     VAULT = vault
+    (VAULT / "10 - Ingest" / "RAW").mkdir(parents=True, exist_ok=True)
     for name, schema in SCHEMAS.items():
         write(VAULT / "09 - System" / "Contracts" / name, json.dumps(schema, ensure_ascii=False, indent=2) + "\n")
     vocab = "version: 1.0.0\n" + "\n".join(f"{key}:\n" + "\n".join(f"  - {v}" for v in values) for key, values in ENUMS.items()) + "\n"

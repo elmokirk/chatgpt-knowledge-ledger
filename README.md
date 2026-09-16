@@ -19,6 +19,8 @@ python scripts/chatlog.py init --vault "../my-chatgpt-ledger"
 python scripts/chatlog.py validate --vault "../my-chatgpt-ledger"
 ```
 
+`init` creates the documented ingest directory at `10 - Ingest/RAW`. Paths use native platform separators; the quoted names with spaces are supported on Windows, macOS, and Linux.
+
 Open `../my-chatgpt-ledger/00 - ChatGPT Knowledge Ledger.md` directly or add the folder as an Obsidian vault.
 
 ## Import your ChatGPT export

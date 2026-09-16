@@ -40,5 +40,11 @@ class LedgerTests(unittest.TestCase):
         with self.assertRaises(ValidationError): validate({"schema":"chatgpt-session/v1","note_type":"chat_session","contexts":[],"content_types":["invented"]},schema)
     def test_entity_candidates_deduplicate(self):
         q=self.vault/"09 - System"/"Registries"/"Entity Candidates.yaml"; p=[{"axis":"concept","name":"New Concept","chat_ids":["a"],"confidence":"high"}]; update_candidates(q,p,"2026-09-12T10:00:00+00:00"); rows=update_candidates(q,p,"2026-09-12T10:00:00+00:00"); row=next(x for x in rows if x["proposed_name"]=="New Concept"); self.assertEqual(row["occurrence_count"],"1")
+    def test_scaffold_paths_are_portable(self):
+        reserved={"CON","PRN","AUX","NUL",*(f"COM{i}" for i in range(1,10)),*(f"LPT{i}" for i in range(1,10))}; paths=[p.relative_to(self.vault) for p in self.vault.rglob("*")]; folded=[p.as_posix().casefold() for p in paths]
+        self.assertEqual(len(folded),len(set(folded)))
+        for path in paths:
+            for part in path.parts:
+                self.assertFalse(set('<>:"/\\|?*') & set(part)); self.assertFalse(part.endswith((" ","."))); self.assertNotIn(part.split(".")[0].upper(),reserved)
 
 if __name__=="__main__": unittest.main()
