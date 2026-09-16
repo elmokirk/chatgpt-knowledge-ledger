@@ -1,0 +1,11 @@
+{
+  "schema": "workspace-runtime-manifest/v1",
+  "canonical_skill_root": ".agents/skills",
+  "canonical_hook_root": ".agents/hooks",
+  "adapters": [],
+  "global_installation_allowed": false,
+  "skills": {
+    "chatgpt-knowledge-ledger": {"version": "1.0.0", "path": ".agents/skills/chatgpt-knowledge-ledger"},
+    "chatgpt-asset-reconcile": {"version": "1.0.0", "path": ".agents/skills/chatgpt-asset-reconcile"}
+  }
+}

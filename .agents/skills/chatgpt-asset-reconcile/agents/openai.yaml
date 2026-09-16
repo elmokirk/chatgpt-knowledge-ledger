@@ -1,0 +1,4 @@
+interface:
+  display_name: "ChatGPT Asset Reconcile"
+  short_description: "Hash-based reversible asset reconciliation"
+  default_prompt: "Use $chatgpt-asset-reconcile in report-only mode against an explicitly authorized source root."

@@ -1,0 +1,4 @@
+interface:
+  display_name: "ChatGPT Knowledge Ledger"
+  short_description: "Deterministic local conversation ledger"
+  default_prompt: "Use $chatgpt-knowledge-ledger to inspect or maintain explicitly authorized local ledger data."

@@ -1,0 +1,466 @@
+{
+  "conversations": [
+    {
+      "id": "11111111-1111-4111-8111-111111111111",
+      "title": "Codrops WebGL Build",
+      "create_time": "2026-09-08T10:00:00+02:00",
+      "update_time": "2026-09-08T10:02:00+02:00",
+      "mapping": {
+        "root": {
+          "id": "root",
+          "parent": null,
+          "children": [
+            "11111111-1111-4111-8111-111111111111-u"
+          ],
+          "message": null
+        },
+        "11111111-1111-4111-8111-111111111111-u": {
+          "id": "11111111-1111-4111-8111-111111111111-u",
+          "parent": "root",
+          "children": [
+            "11111111-1111-4111-8111-111111111111-a"
+          ],
+          "message": {
+            "id": "11111111-1111-4111-8111-111111111111-u",
+            "author": {
+              "role": "user"
+            },
+            "create_time": "2026-09-08T10:00:00+02:00",
+            "content": {
+              "parts": [
+                "Build a WebGL component"
+              ]
+            },
+            "attachments": [
+              {
+                "name": "demo.png"
+              }
+            ]
+          }
+        },
+        "11111111-1111-4111-8111-111111111111-a": {
+          "id": "11111111-1111-4111-8111-111111111111-a",
+          "parent": "11111111-1111-4111-8111-111111111111-u",
+          "children": [],
+          "message": {
+            "id": "11111111-1111-4111-8111-111111111111-a",
+            "author": {
+              "role": "assistant"
+            },
+            "create_time": "2026-09-08T10:01:00+02:00",
+            "content": {
+              "parts": [
+                "```typescript\nexport const line0 = 0;\nexport const line1 = 1;\nexport const line2 = 2;\nexport const line3 = 3;\nexport const line4 = 4;\nexport const line5 = 5;\nexport const line6 = 6;\nexport const line7 = 7;\nexport const line8 = 8;\nexport const line9 = 9;\nexport const line10 = 10;\nexport const line11 = 11;\nexport const line12 = 12;\nexport const line13 = 13;\nexport const line14 = 14;\nexport const line15 = 15;\nexport const line16 = 16;\nexport const line17 = 17;\nexport const line18 = 18;\nexport const line19 = 19;\nexport const line20 = 20;\nexport const line21 = 21;\nexport const line22 = 22;\nexport const line23 = 23;\nexport const line24 = 24;\nexport const line25 = 25;\nexport const line26 = 26;\nexport const line27 = 27;\nexport const line28 = 28;\nexport const line29 = 29;\nexport const line30 = 30;\nexport const line31 = 31;\nexport const line32 = 32;\nexport const line33 = 33;\nexport const line34 = 34;\nexport const line35 = 35;\nexport const line36 = 36;\nexport const line37 = 37;\nexport const line38 = 38;\nexport const line39 = 39;\nexport const line40 = 40;\nexport const line41 = 41;\nexport const line42 = 42;\nexport const line43 = 43;\nexport const line44 = 44;\nexport const line45 = 45;\nexport const line46 = 46;\nexport const line47 = 47;\nexport const line48 = 48;\nexport const line49 = 49;\nexport const line50 = 50;\nexport const line51 = 51;\nexport const line52 = 52;\nexport const line53 = 53;\nexport const line54 = 54;\nexport const line55 = 55;\nexport const line56 = 56;\nexport const line57 = 57;\nexport const line58 = 58;\nexport const line59 = 59;\nexport const line60 = 60;\nexport const line61 = 61;\nexport const line62 = 62;\nexport const line63 = 63;\nexport const line64 = 64;\nexport const line65 = 65;\nexport const line66 = 66;\nexport const line67 = 67;\nexport const line68 = 68;\nexport const line69 = 69;\nexport const line70 = 70;\nexport const line71 = 71;\nexport const line72 = 72;\nexport const line73 = 73;\nexport const line74 = 74;\nexport const line75 = 75;\nexport const line76 = 76;\nexport const line77 = 77;\nexport const line78 = 78;\nexport const line79 = 79;\nexport const line80 = 80;\nexport const line81 = 81;\nexport const line82 = 82;\nexport const line83 = 83;\nexport const line84 = 84;\nexport const line85 = 85;\nexport const line86 = 86;\nexport const line87 = 87;\nexport const line88 = 88;\nexport const line89 = 89;\nexport const line90 = 90;\nexport const line91 = 91;\nexport const line92 = 92;\nexport const line93 = 93;\nexport const line94 = 94;\nexport const line95 = 95;\nexport const line96 = 96;\nexport const line97 = 97;\nexport const line98 = 98;\nexport const line99 = 99;\nexport const line100 = 100;\nexport const line101 = 101;\nexport const line102 = 102;\nexport const line103 = 103;\nexport const line104 = 104;\nexport const line105 = 105;\nexport const line106 = 106;\nexport const line107 = 107;\nexport const line108 = 108;\nexport const line109 = 109;\nexport const line110 = 110;\nexport const line111 = 111;\nexport const line112 = 112;\nexport const line113 = 113;\nexport const line114 = 114;\nexport const line115 = 115;\nexport const line116 = 116;\nexport const line117 = 117;\nexport const line118 = 118;\nexport const line119 = 119;\nexport const line120 = 120;\nexport const line121 = 121;\nexport const line122 = 122;\nexport const line123 = 123;\nexport const line124 = 124;\nexport const line125 = 125;\nexport const line126 = 126;\nexport const line127 = 127;\nexport const line128 = 128;\nexport const line129 = 129;\nexport const line130 = 130;\nexport const line131 = 131;\nexport const line132 = 132;\nexport const line133 = 133;\nexport const line134 = 134;\nexport const line135 = 135;\nexport const line136 = 136;\nexport const line137 = 137;\nexport const line138 = 138;\nexport const line139 = 139;\nexport const line140 = 140;\nexport const line141 = 141;\nexport const line142 = 142;\nexport const line143 = 143;\nexport const line144 = 144;\nexport const line145 = 145;\nexport const line146 = 146;\nexport const line147 = 147;\nexport const line148 = 148;\nexport const line149 = 149;\nexport const line150 = 150;\nexport const line151 = 151;\nexport const line152 = 152;\nexport const line153 = 153;\nexport const line154 = 154;\nexport const line155 = 155;\nexport const line156 = 156;\nexport const line157 = 157;\nexport const line158 = 158;\nexport const line159 = 159;\nexport const line160 = 160;\nexport const line161 = 161;\nexport const line162 = 162;\nexport const line163 = 163;\nexport const line164 = 164;\nexport const line165 = 165;\nexport const line166 = 166;\nexport const line167 = 167;\nexport const line168 = 168;\nexport const line169 = 169;\nexport const line170 = 170;\nexport const line171 = 171;\nexport const line172 = 172;\nexport const line173 = 173;\nexport const line174 = 174;\nexport const line175 = 175;\nexport const line176 = 176;\nexport const line177 = 177;\nexport const line178 = 178;\nexport const line179 = 179;\nexport const line180 = 180;\nexport const line181 = 181;\nexport const line182 = 182;\nexport const line183 = 183;\nexport const line184 = 184;\nexport const line185 = 185;\nexport const line186 = 186;\nexport const line187 = 187;\nexport const line188 = 188;\nexport const line189 = 189;\nexport const line190 = 190;\nexport const line191 = 191;\nexport const line192 = 192;\nexport const line193 = 193;\nexport const line194 = 194;\nexport const line195 = 195;\nexport const line196 = 196;\nexport const line197 = 197;\nexport const line198 = 198;\nexport const line199 = 199;\nexport const line200 = 200;\nexport const line201 = 201;\nexport const line202 = 202;\nexport const line203 = 203;\nexport const line204 = 204;\nexport const line205 = 205;\nexport const line206 = 206;\nexport const line207 = 207;\nexport const line208 = 208;\nexport const line209 = 209;\nexport const line210 = 210;\nexport const line211 = 211;\nexport const line212 = 212;\nexport const line213 = 213;\nexport const line214 = 214;\nexport const line215 = 215;\nexport const line216 = 216;\nexport const line217 = 217;\nexport const line218 = 218;\nexport const line219 = 219;\nexport const line220 = 220;\nexport const line221 = 221;\nexport const line222 = 222;\nexport const line223 = 223;\nexport const line224 = 224;\nexport const line225 = 225;\nexport const line226 = 226;\nexport const line227 = 227;\nexport const line228 = 228;\nexport const line229 = 229;\nexport const line230 = 230;\nexport const line231 = 231;\nexport const line232 = 232;\nexport const line233 = 233;\nexport const line234 = 234;\nexport const line235 = 235;\nexport const line236 = 236;\nexport const line237 = 237;\nexport const line238 = 238;\nexport const line239 = 239;\nexport const line240 = 240;\nexport const line241 = 241;\nexport const line242 = 242;\nexport const line243 = 243;\nexport const line244 = 244;\nexport const line245 = 245;\nexport const line246 = 246;\nexport const line247 = 247;\nexport const line248 = 248;\nexport const line249 = 249;\nexport const line250 = 250;\nexport const line251 = 251;\nexport const line252 = 252;\nexport const line253 = 253;\nexport const line254 = 254;\nexport const line255 = 255;\nexport const line256 = 256;\nexport const line257 = 257;\nexport const line258 = 258;\nexport const line259 = 259;\nexport const line260 = 260;\nexport const line261 = 261;\nexport const line262 = 262;\nexport const line263 = 263;\nexport const line264 = 264;\nexport const line265 = 265;\nexport const line266 = 266;\nexport const line267 = 267;\nexport const line268 = 268;\nexport const line269 = 269;\nexport const line270 = 270;\nexport const line271 = 271;\nexport const line272 = 272;\nexport const line273 = 273;\nexport const line274 = 274;\nexport const line275 = 275;\nexport const line276 = 276;\nexport const line277 = 277;\nexport const line278 = 278;\nexport const line279 = 279;\nexport const line280 = 280;\nexport const line281 = 281;\nexport const line282 = 282;\nexport const line283 = 283;\nexport const line284 = 284;\nexport const line285 = 285;\nexport const line286 = 286;\nexport const line287 = 287;\nexport const line288 = 288;\nexport const line289 = 289;\nexport const line290 = 290;\nexport const line291 = 291;\nexport const line292 = 292;\nexport const line293 = 293;\nexport const line294 = 294;\nexport const line295 = 295;\nexport const line296 = 296;\nexport const line297 = 297;\nexport const line298 = 298;\nexport const line299 = 299;\nexport const line300 = 300;\n```"
+              ]
+            }
+          }
+        }
+      },
+      "current_node": "11111111-1111-4111-8111-111111111111-a",
+      "session_kind": "build",
+      "contexts": [
+        "project",
+        "business"
+      ],
+      "content_types": [
+        "implementation",
+        "debugging"
+      ],
+      "workflow_status": "completed",
+      "privacy_class": "private",
+      "summary": "Representative build conversation.",
+      "primary_goal": "Build a WebGL component",
+      "projects": [],
+      "concepts": [],
+      "collections": [],
+      "areas": [],
+      "people": [],
+      "topics": []
+    },
+    {
+      "id": "22222222-2222-4222-8222-222222222222",
+      "title": "Website Redesign",
+      "create_time": "2026-09-08T10:00:00+02:00",
+      "update_time": "2026-09-08T10:02:00+02:00",
+      "mapping": {
+        "root": {
+          "id": "root",
+          "parent": null,
+          "children": [
+            "22222222-2222-4222-8222-222222222222-u"
+          ],
+          "message": null
+        },
+        "22222222-2222-4222-8222-222222222222-u": {
+          "id": "22222222-2222-4222-8222-222222222222-u",
+          "parent": "root",
+          "children": [
+            "22222222-2222-4222-8222-222222222222-a",
+            "22222222-2222-4222-8222-222222222222-alt"
+          ],
+          "message": {
+            "id": "22222222-2222-4222-8222-222222222222-u",
+            "author": {
+              "role": "user"
+            },
+            "create_time": "2026-09-08T10:00:00+02:00",
+            "content": {
+              "parts": [
+                "Iterate on a website"
+              ]
+            }
+          }
+        },
+        "22222222-2222-4222-8222-222222222222-a": {
+          "id": "22222222-2222-4222-8222-222222222222-a",
+          "parent": "22222222-2222-4222-8222-222222222222-u",
+          "children": [],
+          "message": {
+            "id": "22222222-2222-4222-8222-222222222222-a",
+            "author": {
+              "role": "assistant"
+            },
+            "create_time": "2026-09-08T10:01:00+02:00",
+            "content": {
+              "parts": [
+                "Iteration complete"
+              ]
+            }
+          }
+        },
+        "22222222-2222-4222-8222-222222222222-alt": {
+          "id": "22222222-2222-4222-8222-222222222222-alt",
+          "parent": "22222222-2222-4222-8222-222222222222-u",
+          "children": [],
+          "message": {
+            "id": "22222222-2222-4222-8222-222222222222-alt",
+            "author": {
+              "role": "assistant"
+            },
+            "create_time": "2026-09-08T10:02:00+02:00",
+            "content": {
+              "parts": [
+                "Alternative branch response"
+              ]
+            }
+          }
+        }
+      },
+      "current_node": "22222222-2222-4222-8222-222222222222-a",
+      "session_kind": "build",
+      "contexts": [
+        "project"
+      ],
+      "content_types": [
+        "planning",
+        "implementation"
+      ],
+      "workflow_status": "completed",
+      "privacy_class": "private",
+      "summary": "Representative build conversation.",
+      "primary_goal": "Iterate on a website",
+      "projects": [],
+      "concepts": [],
+      "collections": [],
+      "areas": [],
+      "people": [],
+      "topics": []
+    },
+    {
+      "id": "33333333-3333-4333-8333-333333333333",
+      "title": "CMS Research",
+      "create_time": "2026-09-08T10:00:00+02:00",
+      "update_time": "2026-09-08T10:02:00+02:00",
+      "mapping": {
+        "root": {
+          "id": "root",
+          "parent": null,
+          "children": [
+            "33333333-3333-4333-8333-333333333333-u"
+          ],
+          "message": null
+        },
+        "33333333-3333-4333-8333-333333333333-u": {
+          "id": "33333333-3333-4333-8333-333333333333-u",
+          "parent": "root",
+          "children": [
+            "33333333-3333-4333-8333-333333333333-a"
+          ],
+          "message": {
+            "id": "33333333-3333-4333-8333-333333333333-u",
+            "author": {
+              "role": "user"
+            },
+            "create_time": "2026-09-08T10:00:00+02:00",
+            "content": {
+              "parts": [
+                "Compare CMS tools"
+              ]
+            }
+          }
+        },
+        "33333333-3333-4333-8333-333333333333-a": {
+          "id": "33333333-3333-4333-8333-333333333333-a",
+          "parent": "33333333-3333-4333-8333-333333333333-u",
+          "children": [],
+          "message": {
+            "id": "33333333-3333-4333-8333-333333333333-a",
+            "author": {
+              "role": "assistant"
+            },
+            "create_time": "2026-09-08T10:01:00+02:00",
+            "content": {
+              "parts": [
+                "Sources: https://example.com and https://example.org"
+              ]
+            }
+          }
+        }
+      },
+      "current_node": "33333333-3333-4333-8333-333333333333-a",
+      "session_kind": "research",
+      "contexts": [
+        "business",
+        "learning"
+      ],
+      "content_types": [
+        "research",
+        "review"
+      ],
+      "workflow_status": "completed",
+      "privacy_class": "private",
+      "summary": "Representative research conversation.",
+      "primary_goal": "Compare CMS tools",
+      "projects": [],
+      "concepts": [],
+      "collections": [],
+      "areas": [],
+      "people": [],
+      "topics": []
+    },
+    {
+      "id": "44444444-4444-4444-8444-444444444444",
+      "title": "Sales Pitch",
+      "create_time": "2026-09-08T10:00:00+02:00",
+      "update_time": "2026-09-08T10:02:00+02:00",
+      "mapping": {
+        "root": {
+          "id": "root",
+          "parent": null,
+          "children": [
+            "44444444-4444-4444-8444-444444444444-u"
+          ],
+          "message": null
+        },
+        "44444444-4444-4444-8444-444444444444-u": {
+          "id": "44444444-4444-4444-8444-444444444444-u",
+          "parent": "root",
+          "children": [
+            "44444444-4444-4444-8444-444444444444-a"
+          ],
+          "message": {
+            "id": "44444444-4444-4444-8444-444444444444-u",
+            "author": {
+              "role": "user"
+            },
+            "create_time": "2026-09-08T10:00:00+02:00",
+            "content": {
+              "parts": [
+                "Create a pitch"
+              ]
+            }
+          }
+        },
+        "44444444-4444-4444-8444-444444444444-a": {
+          "id": "44444444-4444-4444-8444-444444444444-a",
+          "parent": "44444444-4444-4444-8444-444444444444-u",
+          "children": [],
+          "message": {
+            "id": "44444444-4444-4444-8444-444444444444-a",
+            "author": {
+              "role": "assistant"
+            },
+            "create_time": "2026-09-08T10:01:00+02:00",
+            "content": {
+              "parts": [
+                "Pitch and objections drafted"
+              ]
+            }
+          }
+        }
+      },
+      "current_node": "44444444-4444-4444-8444-444444444444-a",
+      "session_kind": "strategy_sales",
+      "contexts": [
+        "business"
+      ],
+      "content_types": [
+        "strategy",
+        "writing"
+      ],
+      "workflow_status": "completed",
+      "privacy_class": "private",
+      "summary": "Representative strategy_sales conversation.",
+      "primary_goal": "Create a pitch",
+      "projects": [],
+      "concepts": [],
+      "collections": [],
+      "areas": [],
+      "people": [],
+      "topics": []
+    },
+    {
+      "id": "55555555-5555-4555-8555-555555555555",
+      "title": "Skill System Design",
+      "create_time": "2026-09-08T10:00:00+02:00",
+      "update_time": "2026-09-08T10:02:00+02:00",
+      "mapping": {
+        "root": {
+          "id": "root",
+          "parent": null,
+          "children": [
+            "55555555-5555-4555-8555-555555555555-u"
+          ],
+          "message": null
+        },
+        "55555555-5555-4555-8555-555555555555-u": {
+          "id": "55555555-5555-4555-8555-555555555555-u",
+          "parent": "root",
+          "children": [
+            "55555555-5555-4555-8555-555555555555-a"
+          ],
+          "message": {
+            "id": "55555555-5555-4555-8555-555555555555-u",
+            "author": {
+              "role": "user"
+            },
+            "create_time": "2026-09-08T10:00:00+02:00",
+            "content": {
+              "parts": [
+                "Design a skill system"
+              ]
+            }
+          }
+        },
+        "55555555-5555-4555-8555-555555555555-a": {
+          "id": "55555555-5555-4555-8555-555555555555-a",
+          "parent": "55555555-5555-4555-8555-555555555555-u",
+          "children": [],
+          "message": {
+            "id": "55555555-5555-4555-8555-555555555555-a",
+            "author": {
+              "role": "assistant"
+            },
+            "create_time": "2026-09-08T10:01:00+02:00",
+            "content": {
+              "parts": [
+                "Contracts prepared"
+              ]
+            }
+          }
+        }
+      },
+      "current_node": "55555555-5555-4555-8555-555555555555-a",
+      "session_kind": "system_skill",
+      "contexts": [
+        "project"
+      ],
+      "content_types": [
+        "planning",
+        "implementation"
+      ],
+      "workflow_status": "completed",
+      "privacy_class": "private",
+      "summary": "Representative system_skill conversation.",
+      "primary_goal": "Design a skill system",
+      "projects": [],
+      "concepts": [],
+      "collections": [],
+      "areas": [],
+      "people": [],
+      "topics": [],
+      "future_unknown": {
+        "kept": true
+      },
+      "entity_candidates": [
+        {
+          "axis": "concept",
+          "name": "Novel Memory Graph",
+          "confidence": "high",
+          "reason": "fixture unknown entity"
+        }
+      ]
+    },
+    {
+      "id": "66666666-6666-4666-8666-666666666666",
+      "title": "Website Redesign",
+      "create_time": "2026-09-08T10:00:00+02:00",
+      "update_time": "2026-09-08T10:02:00+02:00",
+      "mapping": {
+        "root": {
+          "id": "root",
+          "parent": null,
+          "children": [
+            "66666666-6666-4666-8666-666666666666-u"
+          ],
+          "message": null
+        },
+        "66666666-6666-4666-8666-666666666666-u": {
+          "id": "66666666-6666-4666-8666-666666666666-u",
+          "parent": "root",
+          "children": [
+            "66666666-6666-4666-8666-666666666666-a"
+          ],
+          "message": {
+            "id": "66666666-6666-4666-8666-666666666666-u",
+            "author": {
+              "role": "user"
+            },
+            "create_time": "2026-09-08T10:00:00+02:00",
+            "content": {
+              "parts": [
+                "Reflect on focus"
+              ]
+            }
+          }
+        },
+        "66666666-6666-4666-8666-666666666666-a": {
+          "id": "66666666-6666-4666-8666-666666666666-a",
+          "parent": "66666666-6666-4666-8666-666666666666-u",
+          "children": [],
+          "message": {
+            "id": "66666666-6666-4666-8666-666666666666-a",
+            "author": {
+              "role": "assistant"
+            },
+            "create_time": "2026-09-08T10:01:00+02:00",
+            "content": {
+              "parts": [
+                "Reflection recorded"
+              ]
+            }
+          }
+        }
+      },
+      "current_node": "66666666-6666-4666-8666-666666666666-a",
+      "session_kind": "personal",
+      "contexts": [
+        "personal"
+      ],
+      "content_types": [
+        "review",
+        "reflection"
+      ],
+      "workflow_status": "completed",
+      "privacy_class": "sensitive",
+      "summary": "Representative personal conversation.",
+      "primary_goal": "Reflect on focus",
+      "projects": [],
+      "concepts": [],
+      "collections": [],
+      "areas": [],
+      "people": [],
+      "topics": []
+    }
+  ]
+}

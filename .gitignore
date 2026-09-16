@@ -1,0 +1,9 @@
+__pycache__/
+*.py[cod]
+.venv/
+.env
+work/
+personal/
+*.zip
+10 - Ingest/RAW/*
+!10 - Ingest/RAW/.gitkeep
