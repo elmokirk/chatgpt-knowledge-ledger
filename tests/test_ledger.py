@@ -34,7 +34,7 @@ class LedgerTests(unittest.TestCase):
     def test_weekly_moc_exposes_required_axes(self):
         ingest(FIX,self.vault); moc=next(p for p in (self.vault/"01 - MOCs"/"Weekly").rglob("*.md") if p.name != "Index.md"); text=moc.read_text(encoding="utf-8"); self.assertIn("Context | Content types | Projects",text); self.assertIn("project, business",text); self.assertIn("Novel Memory Graph",text)
     def test_live_50_coverage_guard(self):
-        entries=json.loads((ROOT/"tests"/"fixtures"/"exports"/"positive"/"live-50.json").read_text(encoding="utf-8"))["entries"]; self.assertEqual(evaluate(entries)["coverage_status"],"risk")
+        entries=json.loads((ROOT/"tests"/"fixtures"/"exports"/"positive"/"live-50.json").read_text(encoding="utf-8"))["entries"]; result=evaluate(entries,{str(entries[0]["id"]):{"source_updated_at":entries[0].get("updated_at")}}); self.assertEqual(result["coverage_status"],"risk"); self.assertEqual(sum(result["counts"].values()),result["chat_count"])
     def test_negative_schema(self):
         schema=schema_for(self.vault,"chat-session.schema.json")
         with self.assertRaises(ValidationError): validate({"schema":"chatgpt-session/v1","note_type":"chat_session","contexts":[],"content_types":["invented"]},schema)

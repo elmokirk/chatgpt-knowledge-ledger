@@ -1,14 +1,14 @@
 """Run the weekly live-index pipeline manually without creating an automation."""
 from __future__ import annotations
 
-import argparse, json, re
+import argparse, hashlib, json, re
 from datetime import datetime, timedelta, timezone
 from pathlib import Path
 
 from ledger import PARSER_VERSION
 from ledger.contracts import schema_for, validate
 from ledger.entities import update_candidates
-from ledger.util import atomic_write, dump_frontmatter
+from ledger.util import atomic_write, canonical_json, dump_frontmatter, immutable_write
 from ledger.validate_vault import validate_vault
 
 # The test run is fixed to September (CEST). The scheduler configuration retains
@@ -42,13 +42,13 @@ def run(snapshot_path: Path, vault: Path) -> dict:
     source=json.loads(snapshot_path.read_text(encoding="utf-8")); run_id=source["run_id"]; generated_at=source["retrieved_at"]
     year,week,_=datetime.fromisoformat(generated_at).date().isocalendar(); iso_week=f"{year}-W{week:02d}"
     weekly_rel=f"01 - MOCs/Weekly/{year}/{iso_week} - ChatGPT Weekly MOC.md"
-    rendered=[]; candidates=[]; registry={"schema":"registry/v1","records":{}}
+    rendered=[]; candidates=[]; registry_path=vault/"09 - System"/"Registries"/"Chat Registry.json"; registry=json.loads(registry_path.read_text(encoding="utf-8"))
     for rec in source["records"]:
         created=timestamp(rec["created_at"]); updated=timestamp(rec["updated_at"]); day=created[:10]; y,m=day[:4],day[5:7]; title=safe_title(rec["title"]); short=rec["chat_id"][:8]
-        raw_rel=f"03 - Transcripts/Raw/Conversations/chat_{rec['chat_id']}.json"
+        raw_rel=f"03 - Transcripts/Raw/Live/{run_id}/chat_{rec['chat_id']}.json"
         transcript_rel=f"03 - Transcripts/Normalized/{y}/chat_{rec['chat_id']}.md"
         chat_rel=f"02 - Chats/{y}/{y}-{m}/{day} - {title} - {short}.md"
-        atomic_write(vault/raw_rel,json.dumps(rec,ensure_ascii=False,sort_keys=True,indent=2)+"\n")
+        immutable_write(vault/raw_rel,json.dumps(rec,ensure_ascii=False,sort_keys=True,indent=2)+"\n")
         messages=rec.get("messages",[])
         transcript_meta={"schema":"chatgpt-transcript/v2","note_type":"normalized_transcript","chat_id":rec["chat_id"],"branch_id":"live-recent","parent_message_id":None,"message_count":len(messages),"parser_version":PARSER_VERSION,"code_storage":"inline","externalized_code_refs":[]}
         validate(transcript_meta,schema_for(vault,"transcript.schema.json"),transcript_rel)
@@ -65,26 +65,25 @@ def run(snapshot_path: Path, vault: Path) -> dict:
         validate(meta,schema_for(vault,"chat-session.schema.json"),chat_rel)
         body=f"\n# {rec['title']}\n\n> [!abstract] Abstract\n> {rec['summary']}\n\n## Navigation\n\n- [[#Intent and success criteria]]\n- [[#Outcomes]]\n- [[#Related knowledge]]\n- [[#Transcript references]]\n\n## Intent and success criteria\n\n- **Primary goal:** {rec['primary_goal']}\n\n## Starting context and inputs\n\nLive app snapshot; historic source pending export.\n\n## Outcomes\n\n- Recent app content indexed for review.\n\n## Decisions\n\n_Not asserted from the partial live window._\n\n## Iterations and feedback\n\nSee partial transcript.\n\n## Outputs and assets\n\n- **Indicated output types:** {', '.join(output_types) if output_types else 'none identified'}\n\n## Verification and evidence\n\n- **Verification:** not_verified\n- **Completeness:** partial\n\n## Research and sources\n\n_Not normalized during this first live test._\n\n## Failures and blockers\n\n- Historic completeness requires a ChatGPT data export.\n\n## Open loops and next actions\n\n- [ ] Reconcile with historic export.\n\n## Reuse and transferability\n\nReview exact recent turns before reuse.\n\n## Related knowledge\n\n- **Contexts:** {', '.join(meta['contexts'])}\n- **Content types:** {', '.join(meta['content_types'])}\n- **Topics:** {', '.join(meta['topics'])}\n\n## Transcript references\n\n- [Open original ChatGPT conversation]({meta['chat_url']})\n- [[{transcript_rel}|Partial normalized transcript]]\n- [[{raw_rel}|Raw live snapshot]]\n"
         atomic_write(vault/chat_rel,dump_frontmatter(meta)+body)
-        rendered.append({"meta":meta,"chat_rel":chat_rel})
-        registry["records"][rec["chat_id"]]={"note_path":chat_rel,"source_kind":"chatgpt_live_index","last_indexed_at":generated_at}
+        rendered.append({"meta":meta,"chat_rel":chat_rel,"change_type":rec.get("change_type","new")})
+        registry["records"][rec["chat_id"]]={"note_path":chat_rel,"source_kind":"chatgpt_live_index","last_indexed_at":generated_at,"source_updated_at":rec["updated_at"],"content_digest":hashlib.sha256(canonical_json(rec)).hexdigest()}
     queue=update_candidates(vault/"09 - System"/"Registries"/"Entity Candidates.yaml",candidates,generated_at)
     pending=[x for x in queue if x.get("status")=="pending"]
     start=datetime.fromisoformat(generated_at).date(); start=start.fromordinal(start.toordinal()-start.weekday()); end=start.fromordinal(start.toordinal()+6)
-    moc_meta={"schema":"chatgpt-weekly-moc/v1","note_type":"weekly_moc","iso_week":iso_week,"period_start":start.isoformat(),"period_end":end.isoformat(),"generated_at":generated_at,"run_id":run_id,"chat_count":len(rendered),"new_count":len(rendered),"updated_count":0,"output_count":0,"asset_count":0,"source_count":0,"entity_candidate_count":len(pending),"coverage_status":source["coverage_status"]}
+    new_count=sum(x["change_type"]=="new" for x in rendered); updated_count=sum(x["change_type"]=="updated" for x in rendered)
+    moc_meta={"schema":"chatgpt-weekly-moc/v1","note_type":"weekly_moc","iso_week":iso_week,"period_start":start.isoformat(),"period_end":end.isoformat(),"generated_at":generated_at,"run_id":run_id,"chat_count":len(rendered),"new_count":new_count,"updated_count":updated_count,"output_count":0,"asset_count":0,"source_count":0,"entity_candidate_count":len(pending),"coverage_status":source["coverage_status"]}
     validate(moc_meta,schema_for(vault,"weekly-moc.schema.json"),weekly_rel)
     rows=[]
     for item in sorted(rendered,key=lambda x:(x["meta"]["updated_at"],x["meta"]["chat_id"]),reverse=True):
         m=item["meta"]; clean=lambda s:str(s).replace("|","\\|").replace("\n"," ")
         rows.append(f"| {m['created_at'][:10]} | {clean(m['title'])} | {clean(m['summary'])} | {', '.join(m['contexts'])} | {', '.join(m['content_types'])} |  | [Open]({m['chat_url']}) | [[{item['chat_rel']}|Note]] |  | {', '.join(m['output_types'])} | {m['workflow_status']} |")
     candidate_rows="\n".join(f"| {x['proposed_name']} | {x['proposed_axis']} | {x['evidence_chat_ids']} | {x['confidence']} | pending |" for x in pending) or "| _None_ | | | | |"
-    moc=f"\n# ChatGPT Weekly MOC · {iso_week}\n\n> [!warning] Coverage risk\n> Exactly 50 ChatGPT conversations were returned. This live run cannot claim historic completeness; reconcile it with a data export.\n\n## Chat overview\n\n| Created | Chat | What was done | Context | Content types | Projects | ChatGPT | Chat note | Human note | Outputs | Status |\n|---|---|---|---|---|---|---|---|---|---|---|\n"+"\n".join(rows)+f"\n\n## Entity candidates requiring review\n\n| Candidate | Proposed axis | Evidence | Confidence | Status |\n|---|---|---|---|---|\n{candidate_rows}\n\n## Run health\n\n- Coverage: risk\n- Retrieved chats: {len(rendered)}\n- Chats with older pages: {sum(1 for x in source['records'] if x['page_has_more'])}\n- Validation is rerun after rendering.\n"
+    moc=f"\n# ChatGPT Weekly MOC · {iso_week}\n\n> [!warning] Live coverage\n> {source['reason']}\n\n## Chat overview\n\n| Created | Chat | What was done | Context | Content types | Projects | ChatGPT | Chat note | Human note | Outputs | Status |\n|---|---|---|---|---|---|---|---|---|---|---|\n"+"\n".join(rows)+f"\n\n## Entity candidates requiring review\n\n| Candidate | Proposed axis | Evidence | Confidence | Status |\n|---|---|---|---|---|\n{candidate_rows}\n\n## Run health\n\n- Coverage: {source['coverage_status']}\n- New chats: {new_count}\n- Updated chats: {updated_count}\n- Unchanged chats: {source.get('counts',{}).get('unchanged',0)}\n- Chats with older pages: {sum(1 for x in source['records'] if x['page_has_more'])}\n- Validation is rerun after rendering.\n"
     atomic_write(vault/weekly_rel,dump_frontmatter(moc_meta)+moc)
-    atomic_write(vault/"09 - System"/"Registries"/"Chat Registry.json",json.dumps(registry,ensure_ascii=False,sort_keys=True,indent=2)+"\n")
+    atomic_write(registry_path,json.dumps(registry,ensure_ascii=False,sort_keys=True,indent=2)+"\n")
     validation=validate_vault(vault)
-    report={"schema":"chatgpt-ingest-run/v2","note_type":"ingest_run","run_id":run_id,"mode":"sync_recent","started_at":generated_at,"completed_at":generated_at,"status":"completed" if validation["ok"] else "failed","parser_version":PARSER_VERSION,"schema_version":"v2","source_file":snapshot_path.name,"source_bytes":snapshot_path.stat().st_size,"counts":{"chats":len(rendered),"partial_chats":len(rendered),"paged_chats":sum(1 for x in source["records"] if x["page_has_more"]),"entity_candidates":len(pending)},"warnings":[source["reason"]],"errors":validation["errors"]}
-    run_rel=f"09 - System/Runs/{year}/2026-09-12T20-00-00 - Manual Scheduler Test.json"; atomic_write(vault/run_rel,json.dumps(report,ensure_ascii=False,sort_keys=True,indent=2)+"\n")
     state_path=vault/"09 - System"/"State"/"Scheduler State.json"; state=json.loads(state_path.read_text(encoding="utf-8")); state.update({"status":"not_created","last_manual_test_run":run_id,"last_manual_test_at":generated_at,"last_manual_test_coverage":"risk","observed_successful_runs":0}); atomic_write(state_path,json.dumps(state,ensure_ascii=False,sort_keys=True,indent=2)+"\n")
-    return {"run_id":run_id,"chat_count":len(rendered),"coverage_status":"risk","paged_chats":report["counts"]["paged_chats"],"weekly_moc":str(vault/weekly_rel),"run_report":str(vault/run_rel),"validation":validation}
+    return {"run_id":run_id,"counts":{"new":new_count,"updated":updated_count,"unchanged":source.get("counts",{}).get("unchanged",0),"failed":0},"coverage_status":source["coverage_status"],"paged_chats":sum(1 for x in source["records"] if x["page_has_more"]),"weekly_moc":str(vault/weekly_rel),"validation":validation}
 
 if __name__=="__main__":
     parser=argparse.ArgumentParser(); parser.add_argument("snapshot",type=Path); parser.add_argument("vault",type=Path); args=parser.parse_args(); result=run(args.snapshot,args.vault); print(json.dumps(result,ensure_ascii=False,indent=2)); raise SystemExit(0 if result["validation"]["ok"] else 1)

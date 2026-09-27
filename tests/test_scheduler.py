@@ -7,6 +7,7 @@ import sys
 ROOT=Path(__file__).resolve().parents[1]; sys.path.insert(0,str(ROOT/"scripts"))
 from scaffold_demo import scaffold
 from ledger.scheduler import begin, finish, status
+from run_manual_scheduler import run
 
 
 class SchedulerGateTest(unittest.TestCase):
@@ -23,6 +24,15 @@ class SchedulerGateTest(unittest.TestCase):
             finish(vault,"2026-09-28T12:01:00+02:00",run["run_id"],"completed",{"new":1,"updated":0,"unchanged":0,"failed":0},"complete")
             self.assertEqual(status(vault,now)["action"],"noop")
             before=config.read_bytes(); scaffold(vault); self.assertEqual(config.read_bytes(),before)
+        finally: shutil.rmtree(temp)
+
+    def test_live_run_merges_registry_and_versions_raw(self):
+        temp=Path(tempfile.mkdtemp(prefix="live-run-test-")); vault=temp/"vault"
+        try:
+            scaffold(vault); registry=vault/"09 - System"/"Registries"/"Chat Registry.json"; data=json.loads(registry.read_text(encoding="utf-8")); data["records"]["existing"]={"note_path":"keep.md"}; registry.write_text(json.dumps(data),encoding="utf-8")
+            snapshot=temp/"snapshot.json"; snapshot.write_text(json.dumps({"run_id":"sync-2026-W40-01","retrieved_at":"2026-09-28T12:00:00+02:00","coverage_status":"partial","reason":"synthetic partial live window","counts":{"new":1,"updated":0,"unchanged":0},"records":[{"chat_id":"fixture-live-1","title":"Synthetic live chat","created_at":"2026-09-28T10:00:00+02:00","updated_at":"2026-09-28T11:00:00+02:00","project_id":None,"messages":[],"session_kind":"unknown","primary_goal":"Synthetic live chat","summary":"Synthetic fixture","workflow_status":"unknown","privacy_class":"private","verification_status":"not_verified","contexts":["unknown"],"content_types":["unknown"],"chat_url":"https://chatgpt.com/c/fixture-live-1","page_has_more":False,"change_type":"new"}]}),encoding="utf-8")
+            result=run(snapshot,vault); merged=json.loads(registry.read_text(encoding="utf-8"))["records"]
+            self.assertTrue(result["validation"]["ok"]); self.assertIn("existing",merged); self.assertIn("fixture-live-1",merged); self.assertTrue((vault/"03 - Transcripts"/"Raw"/"Live"/"sync-2026-W40-01"/"chat_fixture-live-1.json").is_file())
         finally: shutil.rmtree(temp)
 
 
