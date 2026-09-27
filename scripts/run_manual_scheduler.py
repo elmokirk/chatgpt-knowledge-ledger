@@ -82,7 +82,7 @@ def run(snapshot_path: Path, vault: Path) -> dict:
     atomic_write(vault/weekly_rel,dump_frontmatter(moc_meta)+moc)
     atomic_write(registry_path,json.dumps(registry,ensure_ascii=False,sort_keys=True,indent=2)+"\n")
     validation=validate_vault(vault)
-    state_path=vault/"09 - System"/"State"/"Scheduler State.json"; state=json.loads(state_path.read_text(encoding="utf-8")); state.update({"status":"not_created","last_manual_test_run":run_id,"last_manual_test_at":generated_at,"last_manual_test_coverage":"risk","observed_successful_runs":0}); atomic_write(state_path,json.dumps(state,ensure_ascii=False,sort_keys=True,indent=2)+"\n")
+    state_path=vault/"09 - System"/"State"/"Scheduler State.json"; state=json.loads(state_path.read_text(encoding="utf-8")); state.update({"last_run":run_id,"last_run_at":generated_at,"last_run_coverage":source["coverage_status"],"observed_successful_runs":int(state.get("observed_successful_runs",0))+int(validation["ok"])}); atomic_write(state_path,json.dumps(state,ensure_ascii=False,sort_keys=True,indent=2)+"\n")
     return {"run_id":run_id,"counts":{"new":new_count,"updated":updated_count,"unchanged":source.get("counts",{}).get("unchanged",0),"failed":0},"coverage_status":source["coverage_status"],"paged_chats":sum(1 for x in source["records"] if x["page_has_more"]),"weekly_moc":str(vault/weekly_rel),"validation":validation}
 
 if __name__=="__main__":
