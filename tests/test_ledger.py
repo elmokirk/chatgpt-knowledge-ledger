@@ -46,5 +46,7 @@ class LedgerTests(unittest.TestCase):
         for path in paths:
             for part in path.parts:
                 self.assertFalse(set('<>:"/\\|?*') & set(part)); self.assertFalse(part.endswith((" ","."))); self.assertNotIn(part.split(".")[0].upper(),reserved)
+    def test_evidence_wikilinks_are_not_ledger_links(self):
+        note=self.vault/"03 - Transcripts"/"Normalized"/"2026"/"evidence.md"; note.parent.mkdir(parents=True); note.write_text("# Evidence\n\n[[External user note]]\n",encoding="utf-8"); self.assertTrue(validate_vault(self.vault)["ok"])
 
 if __name__=="__main__": unittest.main()
