@@ -4,6 +4,8 @@ Turn a ChatGPT data export into a private, Obsidian-compatible knowledge ledger 
 
 Your conversations stay in a vault you choose. This repository contains the reusable tooling only.
 
+See the compact [User Manual](USER_MANUAL.md) for self-setup and agent-assisted setup.
+
 ## Requirements
 
 - Git
