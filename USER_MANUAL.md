@@ -40,6 +40,8 @@ Review the root note, newest Weekly MOC, Entity Candidates, transcripts, and out
 4. Set `enabled` to `true`, then insert both identifiers under `identity_guard`.
 5. Create a local automation only after the vault owner approves it.
 
+Under `summarization`, choose the model and limits. Defaults are `gpt-6-luna`, `low`, 1000 characters for Chat Notes, and 400 for Weekly MOC rows. Keep full text in transcripts; indexes are summaries only. No summary may exceed the hard 3000-character ceiling.
+
 Every scheduled attempt must run `scheduler-status` first. A completed ISO week stops immediately. A due week must pass both the account-ID and project-ID checks before any chat is listed.
 
 ## Agent setup contract

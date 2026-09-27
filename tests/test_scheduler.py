@@ -7,6 +7,7 @@ import sys
 ROOT=Path(__file__).resolve().parents[1]; sys.path.insert(0,str(ROOT/"scripts"))
 from scaffold_demo import scaffold
 from ledger.scheduler import begin, finish, status
+from ledger.summaries import policy
 from run_manual_scheduler import run
 
 
@@ -30,9 +31,21 @@ class SchedulerGateTest(unittest.TestCase):
         temp=Path(tempfile.mkdtemp(prefix="live-run-test-")); vault=temp/"vault"
         try:
             scaffold(vault); registry=vault/"09 - System"/"Registries"/"Chat Registry.json"; data=json.loads(registry.read_text(encoding="utf-8")); data["records"]["existing"]={"note_path":"keep.md"}; registry.write_text(json.dumps(data),encoding="utf-8")
-            snapshot=temp/"snapshot.json"; snapshot.write_text(json.dumps({"run_id":"sync-2026-W40-01","retrieved_at":"2026-09-28T12:00:00+02:00","coverage_status":"partial","reason":"synthetic partial live window","counts":{"new":1,"updated":0,"unchanged":0},"records":[{"chat_id":"fixture-live-1","title":"Synthetic live chat","created_at":"2026-09-28T10:00:00+02:00","updated_at":"2026-09-28T11:00:00+02:00","project_id":None,"messages":[],"session_kind":"unknown","primary_goal":"Synthetic live chat","summary":"Synthetic fixture","workflow_status":"unknown","privacy_class":"private","verification_status":"not_verified","contexts":["unknown"],"content_types":["unknown"],"chat_url":"https://chatgpt.com/c/fixture-live-1","page_has_more":False,"change_type":"new"}]}),encoding="utf-8")
+            long_summary="A concrete result was produced. "+("Verbose evidence that belongs in the transcript, not the index. "*500)
+            snapshot=temp/"snapshot.json"; snapshot.write_text(json.dumps({"run_id":"sync-2026-W40-01","retrieved_at":"2026-09-28T12:00:00+02:00","coverage_status":"partial","reason":"synthetic partial live window","counts":{"new":1,"updated":0,"unchanged":0},"records":[{"chat_id":"fixture-live-1","title":"Synthetic live chat","created_at":"2026-09-28T10:00:00+02:00","updated_at":"2026-09-28T11:00:00+02:00","project_id":None,"messages":[],"session_kind":"unknown","primary_goal":"Synthetic live chat","summary":long_summary,"moc_summary":long_summary,"workflow_status":"unknown","privacy_class":"private","verification_status":"not_verified","contexts":["unknown"],"content_types":["unknown"],"chat_url":"https://chatgpt.com/c/fixture-live-1","page_has_more":False,"change_type":"new"}]}),encoding="utf-8")
             result=run(snapshot,vault); merged=json.loads(registry.read_text(encoding="utf-8"))["records"]
             self.assertTrue(result["validation"]["ok"]); self.assertIn("existing",merged); self.assertIn("fixture-live-1",merged); self.assertTrue((vault/"03 - Transcripts"/"Raw"/"Live"/"sync-2026-W40-01"/"chat_fixture-live-1.json").is_file())
+            moc=next((vault/"01 - MOCs"/"Weekly").rglob("2026-W40*.md")); row=next(line for line in moc.read_text(encoding="utf-8").splitlines() if "Synthetic live chat" in line)
+            self.assertLessEqual(len(row.split("|")[4].strip()),policy(vault)["moc_max_chars"])
+            note=next((vault/"02 - Chats").rglob("*Synthetic live chat*.md")).read_text(encoding="utf-8")
+            self.assertNotIn(long_summary,note)
+        finally: shutil.rmtree(temp)
+
+    def test_summary_limits_reject_more_than_absolute_ceiling(self):
+        temp=Path(tempfile.mkdtemp(prefix="summary-config-test-")); vault=temp/"vault"
+        try:
+            scaffold(vault); config=vault/"09 - System"/"State"/"scheduler.config.json"; data=json.loads(config.read_text(encoding="utf-8")); data["summarization"]["chat_max_chars"]=3001; config.write_text(json.dumps(data),encoding="utf-8")
+            with self.assertRaisesRegex(ValueError,"between 1 and 3000"): policy(vault)
         finally: shutil.rmtree(temp)
 
 

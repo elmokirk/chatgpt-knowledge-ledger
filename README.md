@@ -49,6 +49,10 @@ Review the root note, the newest file under `01 - MOCs/Weekly/`, the Entity Cand
 
 Create an otherwise unused ChatGPT project in the personal workspace and copy its stable project ID. Configure `09 - System/State/scheduler.config.json` inside the private vault with the expected runtime account ID and that project ID, then set `enabled` to `true`. Never commit this private configuration.
 
+The same file controls summarization. The starter defaults to `gpt-6-luna` with `low` reasoning, 1000 characters for a durable chat summary, and 400 characters for the Weekly MOC. Any configured summary limit above 3000 characters is rejected. The MOC keeps complete details behind its Chat Note and transcript links.
+
+Scheduled agents keep LLM summaries separate from RAW evidence and provide them to the renderer through `run_manual_scheduler.py --summaries <summary.json>`.
+
 Automations should call `scheduler-status` first. `noop` ends the run without account or chat lookups. When due, read the current runtime account ID and ChatGPT project IDs, then acquire the weekly lock:
 
 ```powershell
