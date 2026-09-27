@@ -43,6 +43,19 @@ python scripts/chatlog.py validate --vault "../my-chatgpt-ledger"
 
 Review the root note, the newest file under `01 - MOCs/Weekly/`, the Entity Candidate Queue, and any records under `04 - Outputs/Records/`.
 
+## Optional guarded recent sync
+
+Create an otherwise unused ChatGPT project in the personal workspace and copy its stable project ID. Configure `09 - System/State/scheduler.config.json` inside the private vault with the expected runtime account ID and that project ID, then set `enabled` to `true`. Never commit this private configuration.
+
+Automations should call `scheduler-status` first. `noop` ends the run without account or chat lookups. When due, read the current runtime account ID and ChatGPT project IDs, then acquire the weekly lock:
+
+```powershell
+python scripts/chatlog.py scheduler-status --vault "../my-chatgpt-ledger" --now "2026-09-28T12:00:00+02:00"
+python scripts/chatlog.py scheduler-begin --vault "../my-chatgpt-ledger" --now "2026-09-28T12:00:00+02:00" --account-id "observed-account-id" --project-id "g-p-observed-project-id"
+```
+
+Missing or mismatched identity signals abort before chat retrieval. A completed ISO week becomes a cheap no-op; failed weeks may retry. `scheduler-finish` writes an immutable receipt under `09 - System/Runs/` and updates `09 - System/Registries/Sync Run Registry.json`.
+
 ## Safety model
 
 - RAW evidence and human annotations are never overwritten.

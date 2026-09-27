@@ -10,6 +10,7 @@ from ledger.indexes import render_weekly
 from ledger.entities import update_candidates
 from ledger.validate_vault import validate_vault
 from ledger.util import atomic_write
+from ledger.scheduler import begin as scheduler_begin, finish as scheduler_finish, status as scheduler_status
 
 ROOT=Path(__file__).resolve().parents[1]
 
@@ -34,6 +35,9 @@ def main():
     q=sub.add_parser("ingest-export"); q.add_argument("--input",required=True,type=Path); q.add_argument("--vault",required=True,type=Path)
     q=sub.add_parser("validate"); q.add_argument("--vault",required=True,type=Path)
     q=sub.add_parser("rebuild-indexes"); q.add_argument("--vault",required=True,type=Path)
+    q=sub.add_parser("scheduler-status"); q.add_argument("--vault",required=True,type=Path); q.add_argument("--now",required=True)
+    q=sub.add_parser("scheduler-begin"); q.add_argument("--vault",required=True,type=Path); q.add_argument("--now",required=True); q.add_argument("--account-id",required=True); q.add_argument("--project-id",action="append",default=[])
+    q=sub.add_parser("scheduler-finish"); q.add_argument("--vault",required=True,type=Path); q.add_argument("--now",required=True); q.add_argument("--run-id",required=True); q.add_argument("--status",required=True,choices=("completed","failed","blocked")); q.add_argument("--coverage-status",required=True,choices=("complete","risk","partial")); q.add_argument("--counts",required=True,type=json.loads)
     a=p.parse_args()
     if a.cmd=="init":
         from scaffold_demo import scaffold
@@ -41,6 +45,9 @@ def main():
     elif a.cmd=="inspect-export": result=inspect_export(a.input)
     elif a.cmd=="ingest-export": result=ingest(a.input,a.vault)
     elif a.cmd=="validate": result=validate_vault(a.vault)
+    elif a.cmd=="scheduler-status": result=scheduler_status(a.vault,a.now)
+    elif a.cmd=="scheduler-begin": result=scheduler_begin(a.vault,a.now,a.account_id,a.project_id)
+    elif a.cmd=="scheduler-finish": result=scheduler_finish(a.vault,a.now,a.run_id,a.status,a.counts,a.coverage_status)
     else: result={"ok":True,"message":"Indexes are generated during deterministic ingest; no canonical records changed."}
     print(json.dumps(result,ensure_ascii=False,indent=2,default=str)); raise SystemExit(0 if result.get("ok",result.get("validation",{}).get("ok",True)) else 1)
 

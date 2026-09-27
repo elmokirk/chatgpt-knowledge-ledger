@@ -166,6 +166,9 @@ def write(path: Path, text: str) -> None:
     if not path.exists() or path.read_text(encoding="utf-8") != data:
         path.write_text(data, encoding="utf-8", newline="\n")
 
+def write_once(path: Path, text: str) -> None:
+    if not path.exists(): write(path, text)
+
 def scaffold(vault: Path) -> None:
     global VAULT
     VAULT = vault
@@ -178,9 +181,10 @@ def scaffold(vault: Path) -> None:
     for name in ("Chat Registry.json", "Asset Registry.json", "Source Registry.json"):
         write(VAULT / "09 - System" / "Registries" / name, json.dumps({"schema": "registry/v1", "records": {}}, indent=2) + "\n")
     write(VAULT / "09 - System" / "State" / "Import State.json", json.dumps({"schema": "import-state/v1", "batches": {}, "last_successful_run": None}, indent=2) + "\n")
-    write(VAULT / "09 - System" / "State" / "Scheduler State.json", json.dumps({"schema": "scheduler-state/v1", "automation_id": None, "status": "not_created", "observed_successful_runs": 0}, indent=2) + "\n")
-    scheduler = {"schema": "chatgpt-scheduler-config/v1", "enabled": False, "create_automation": False, "name": "ChatGPT Knowledge Ledger · Weekly Sync", "timezone": "Europe/Berlin", "cadence": {"frequency": "weekly", "weekday": "SU", "hour": 20, "minute": 0}, "project_id": None, "prerequisites": ["workspace registered as local Codex project", "historic baseline ingested and reviewed", "two manual weekly-sync fixtures pass", "one approved asset-move fixture passes"], "coverage_limit": 50, "notification_policy": "meaningful_changes_only", "downloads_mode": "report_only"}
-    write(VAULT / "09 - System" / "State" / "scheduler.config.json", json.dumps(scheduler, ensure_ascii=False, indent=2) + "\n")
+    write_once(VAULT / "09 - System" / "State" / "Scheduler State.json", json.dumps({"schema": "scheduler-state/v1", "automation_id": None, "status": "not_created", "observed_successful_runs": 0}, indent=2) + "\n")
+    scheduler = {"schema": "chatgpt-scheduler-config/v2", "enabled": False, "create_automation": False, "name": "ChatGPT Knowledge Ledger · Weekly Sync", "timezone": "Europe/Berlin", "cadence": {"frequency": "daily", "interval_days": 2, "hour": 12, "minute": 0, "maximum_successful_runs_per_iso_week": 1}, "identity_guard": {"expected_account_id": "", "required_chatgpt_project_ids": [], "policy": "all", "on_missing_signal": "abort", "on_mismatch": "abort"}, "coverage_limit": 50, "notification_policy": "meaningful_changes_only", "downloads_mode": "report_only"}
+    write_once(VAULT / "09 - System" / "State" / "scheduler.config.json", json.dumps(scheduler, ensure_ascii=False, indent=2) + "\n")
+    write_once(VAULT / "09 - System" / "Registries" / "Sync Run Registry.json", json.dumps({"schema": "chatgpt-sync-run-registry/v1", "last_successful_run": None, "weeks": {}}, indent=2) + "\n")
     for name, content in TEMPLATES.items(): write(VAULT / "08 - Templates" / name, content)
     for rel, content in DOCS.items(): write(VAULT / rel, content)
     for name, content in BASES.items(): write(VAULT / "07 - Bases" / name, content)
